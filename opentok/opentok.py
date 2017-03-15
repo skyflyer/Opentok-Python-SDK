@@ -474,6 +474,30 @@ class OpenTok(object):
         else:
             raise RequestError("An unexpected error occurred", response.status_code)
 
+    def signal(self, session_id, connection_id, payload):
+        """Sends a signal to all the connections in a session or to a specific one. This is the
+          server-side equivalent to the signal() method in the OpenTok client SDKs:
+          https://www.tokbox.com/developer/guides/signaling/js/.
+
+        :param String session_id: The session ID for the OpenTok session to send the signal to.
+        :param String connection_id: The connection ID of a client connected to the session. Leave
+          this empty if you want to send a signal to all connections in the session.
+        :param Dictionary payload: An object with optional signal type and signal data fields.
+        """
+        if not session_id or not payload:
+            raise OpenTokException(u('SessionId and payload are required'))
+
+        response = requests.post(self.connection_url(session_id, connection_id) + '/signal', data=json.dumps(payload), headers=self.api_headers(), proxies=self.proxies)
+
+        if response.status_code < 300:
+            pass
+        elif response.status_code == 403:
+            raise AuthError()
+        elif response.status_code == 404:
+            raise NotFoundError("Session or connection not found")
+        else:
+            raise RequestError("An unexpected error occurred", response.status_code)
+
     def _sign_string(self, string, secret):
         return hmac.new(secret.encode('utf-8'), string.encode('utf-8'), hashlib.sha1).hexdigest()
 
