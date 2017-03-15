@@ -206,6 +206,19 @@ That URL is called from the /events (<http://localhost:5000/events>) page.
 
 This is the server-side equivalent to the forceDisconnect() method in OpenTok.js:
 <https://www.tokbox.com/developer/guides/moderation/js/#force_disconnect>.
+=======
+Sending signals
+~~~~~~~~~~~~~~~~~~~~~
+
+You can send a signal to all the participants in an OpenTok Session using the
+``opentok.signal(session_id, payload)`` method or send it to a specific participant in the session using the
+``opentok.signal(session_id, connection_id, payload)`` method.
+
+.. code:: python
+   opentok.signal(session_id, connection_id, { 'type': 'chat', 'data': 'Hello!' })
+
+This is the server-side equivalent to the signal() method in the OpenTok client SDKs. See
+<https://www.tokbox.com/developer/guides/signaling/js/>.
 
 Samples
 -------
